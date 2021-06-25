@@ -1,0 +1,22 @@
+{% if list %}
+    <ul>
+    {% for thing in list %}
+        <li>
+          <form action="{% url 'lists:done' thing.id %}" method="post">{% csrf_token %}
+            {% if thing.isDone %}
+             <input type="checkbox" name="done" value="Update" checked>
+            {% else %}
+             <input type="checkbox" name="done" value="Update">
+            {% endif %}
+            <input type="submit" value="Submit">
+          {{ thing.item }}          
+          <span><a href="{% url 'lists:update' thing.id %}">edit</a></span>
+          <span><a href="{% url 'lists:delete' thing.id %}">delete</a></span>
+        </form>
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No items in list</p>
+{% endif %}
+<a href="{% url 'lists:create' %}">Add item to list</a>
