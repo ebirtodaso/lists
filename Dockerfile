@@ -7,3 +7,5 @@ COPY requirements.txt /usr/src/app/
 RUN scripts/install_dependencies.sh
 
 COPY . /usr/src/app/
+
+CMD scripts/start_app.sh
