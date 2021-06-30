@@ -1,3 +1,5 @@
+{% extends 'list/base.html' %}
+{% block content %}
 {% if list %}
     <ul>
     {% for thing in list %}
@@ -20,3 +22,4 @@
     <p>No items in list</p>
 {% endif %}
 <a href="{% url 'lists:create' %}">Add item to list</a>
+{% endblock %}

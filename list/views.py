@@ -22,7 +22,7 @@ class CreateView(generic.edit.CreateView):
 class UpdateView(generic.edit.UpdateView):
     template_name =  'list/update.html'
     model = listItem
-    fields = ['item']
+    fields = ['item', 'isDone']
     success_url = reverse_lazy( 'lists:index')
 
 class DeleteView(generic.edit.DeleteView):
