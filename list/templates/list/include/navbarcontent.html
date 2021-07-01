@@ -1,0 +1,11 @@
+<div class="col-sm-4">
+  <ul>
+    {% if user.is_authenticated %}
+         <li><a href="/">{{user.username|title}}</a></li>
+         <li><a href="{% url 'lists:logout' %}">Logout</a></li>
+    {% else %}
+        <li><a href="{% url 'lists:index' %}">Login</a></li>
+        <li><a href="{% url 'lists:register' %}">Register</a></li>
+    {% endif %}
+  </ul>
+</div>

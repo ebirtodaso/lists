@@ -1,9 +1,17 @@
+#Django libraries
 from django.views import generic
 from django.urls import reverse_lazy
+from django.shortcuts import render, get_object_or_404, redirect
+from django.http import HttpResponseRedirect
+from django.contrib.auth.forms import UserCreationForm # For user creation
+from django.contrib.auth import logout, authenticate, login # User authentication
+from django.contrib import messages
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+
+
+#Defined Libraries
 from .models import listItem
 from .forms import doneForm
-from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponseRedirect
 
 class IndexView(generic.ListView):
     template_name = 'list/index.html'
@@ -22,7 +30,7 @@ class CreateView(generic.edit.CreateView):
 class UpdateView(generic.edit.UpdateView):
     template_name =  'list/update.html'
     model = listItem
-    fields = ['item', 'isDone']
+    fields = ['item']
     success_url = reverse_lazy( 'lists:index')
 
 class DeleteView(generic.edit.DeleteView):
@@ -45,4 +53,36 @@ def DoneView(request, pk):
 
   return HttpResponseRedirect(reverse_lazy('lists:index'))
 
+def register(request):
 
+    if request.method == "POST":
+      form = UserCreationForm(request.POST)
+      if form.is_valid():
+            user = form.save()
+            username = form.cleaned_data.get('username')
+            messages.success(request, f"New account created: {username}")
+            login(request, user)
+            return redirect("lists:index")
+      else:
+        for msg in form.error_messages:
+                  print(form.error_messages[msg])
+
+        return render(request = request,
+                      template_name = "list/register.html",
+                      context={"form":form})
+      
+    form = UserCreationForm
+    return render(request = request,
+                  template_name = "list/register.html",
+                  context={"form":form})
+
+def logout_request(request):
+  logout(request)
+  messages.info(request, "Logged out successfully!")
+  return redirect("lists:index")
+
+def login_request(request):
+    form = AuthenticationForm()
+    return render(request = request,
+                  template_name = "main/login.html",
+                  context={"form":form})

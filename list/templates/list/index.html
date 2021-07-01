@@ -1,45 +1,49 @@
 {% extends 'list/base.html' %}
 {% block content %}
-{% if list %}
-    <ul class="list-group" >
-    {% for thing in list %}
-      <li class="list-group-item">
-
-        <form action="{% url 'lists:done' thing.id %}" method="post">{% csrf_token %}
-
-          <!-- Check if "isDone" is true or false and returns a checkbox with corresponding value -->
-          {% if thing.isDone %}
-            <input id="checkDone" type="checkbox" name="done" value="Update" checked>
-          {% else %}
-            <input id="checkDone" type="checkbox" name="done" value="Update">
-          {% endif %}
-
-          <input class="btn btn-outline-info btn-sm" type="submit" value="Submit">
-        </form>
-        
-        <div class="accordion" id="accordionExample">
-          <div class="accordion-item">
-            <h2 class="accordion-header" id="headingOne">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                {{ thing.item }} 
-              </button>
-            </h2>
-              <!-- Uncollapses with edit and delete options -->
-              <div id="collapseOne" class="accordion-collapse collapse " aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                <div class="accordion-body">
-                  <strong>
-                    <span><a href="{% url 'lists:update' thing.id %}">edit</a></span>
-                    <span><a href="{% url 'lists:delete' thing.id %}">delete</a></span>
-                  </strong> 
-              </div>
+<div class="col-sm-8">
+  {% if list %}
+  <ul class="list-group" >
+    <li class="list-group-item">
+      {% for thing in list %}
+        <br>
+          <form action="{% url 'lists:done' thing.id %}" method="post">{% csrf_token %}
+  
+            <!-- Check if "isDone" is true or false and returns a checkbox with corresponding value -->
+            {% if thing.isDone %}
+              <input id="checkDone" type="checkbox" name="done" value="Update" checked>
+            {% else %}
+              <input id="checkDone" type="checkbox" name="done" value="Update">
+            {% endif %}
+  
+            <input class="btn btn-outline-info btn-sm" type="submit" value="Submit">
+          </form>
+        <br>
+          <div class="accordion" id="accordionExample">
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                  {{ thing.item }} 
+                </button>
+              </h2>
+                <!-- Uncollapses with edit and delete options -->
+                <div id="collapseOne" class="accordion-collapse collapse " aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                  <div class="accordion-body">
+                    <strong>
+                      <span><a href="{% url 'lists:update' thing.id %}">edit</a></span>
+                      <span><a href="{% url 'lists:delete' thing.id %}">delete</a></span>
+                    </strong> 
+                  </div>
+                </div>
+             </div>
             </div>
-          </div>
-      </li>
-    </div>
-    {% endfor %}
-    </ul>
-{% else %}
-  <p>No items in list</p>
-{% endif %}
-  <a class="btn btn-primary" href="{% url 'lists:create' %}" role="button">Add Item</a>
+          <br>
+      {% endfor %}
+    </li>
+  </ul>
+  <br>
+  {% else %}
+    <p>No items in list</p>
+  {% endif %}
+    <a class="btn btn-primary" href="{% url 'lists:create' %}" role="button">Add Item</a>  
+</div>
 {% endblock %}
