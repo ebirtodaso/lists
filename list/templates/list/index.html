@@ -2,48 +2,72 @@
 {% block content %}
 <div class="col-sm-8">
   {% if list %}
-  <ul class="list-group" >
-    <li class="list-group-item">
-      {% for thing in list %}
-        <br>
-          <form action="{% url 'lists:done' thing.id %}" method="post">{% csrf_token %}
-  
-            <!-- Check if "isDone" is true or false and returns a checkbox with corresponding value -->
-            {% if thing.isDone %}
-              <input id="checkDone" type="checkbox" name="done" value="Update" checked>
-            {% else %}
-              <input id="checkDone" type="checkbox" name="done" value="Update">
-            {% endif %}
-  
-            <input class="btn btn-outline-info btn-sm" type="submit" value="Submit">
-          </form>
-        <br>
-          <div class="accordion" id="accordionExample">
-            <div class="accordion-item">
-              <h2 class="accordion-header" id="headingOne">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                  {{ thing.item }} 
-                </button>
-              </h2>
-                <!-- Uncollapses with edit and delete options -->
-                <div id="collapseOne" class="accordion-collapse collapse " aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                  <div class="accordion-body">
-                    <strong>
-                      <span><a href="{% url 'lists:update' thing.id %}">edit</a></span>
-                      <span><a href="{% url 'lists:delete' thing.id %}">delete</a></span>
-                    </strong> 
+    <br>
+      {% for list in list %}
+        <div class="row row-cols-auto">
+          <div class="col">
+            <h2>{{ list.list_name }}</h2>
+          </div>
+          <div class="col">
+            <ul class="nav">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{% url 'lists:update' list.id%}">Change name</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{% url 'lists:delete' list.id%}">Delete list</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      
+        <ul class="list-group" >
+          {% for item in list.items.all %}
+            <li class="list-group-item">
+              <div class="row row-cols-auto">
+              <div class="col col-sm-1">
+                <div class="p-2 ">
+                  <div class="form-check ">
+                    {% if item.isDone %}
+                      <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked>
+                    {% else %}
+                      <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                    {% endif %}
                   </div>
                 </div>
-             </div>
-            </div>
-          <br>
+                        </div>
+              <div class="col-sm-10">
+                <div class="accordion accordion-flush" id="accordionFlushExample">
+                  <div class="accordion-item">
+                    <h2 class="accordion-header" id="flush-heading{{list.id}}{{forloop.counter}}">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse{{list.id}}{{forloop.counter}}" aria-expanded="false" aria-controls="flush-collapse{{list.id}}{{forloop.counter}}">
+                        {{ item.item }}
+                      </button>
+                    </h2>
+                    <!-- Uncollapses with edit and delete options -->
+                    <div id="flush-collapse{{list.id}}{{forloop.counter}}" class="accordion-collapse collapse" aria-labelledby="flush-heading{{list.id}}{{forloop.counter}}" data-bs-parent="#accordionFlushExample">
+                      <div class="accordion-body">
+                        <strong>
+                          <span><a href="{% url 'lists:updateitem' list.id item.id%}">edit</a></span>
+                          <span><a href="{% url 'lists:deleteitem' list.id item.id%}">delete</a></span>
+                        </strong> 
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+          {% endfor %}
+            <li class="list-group-item">
+              <a class="btn btn-outline-secondary btn-sm" href="{% url 'lists:additem' %}" role="button">Add Item</a>
+            </li>
+        </ul>
+      <br>
       {% endfor %}
-    </li>
-  </ul>
-  <br>
+    <br>
   {% else %}
     <p>No items in list</p>
   {% endif %}
-    <a class="btn btn-primary" href="{% url 'lists:create' %}" role="button">Add Item</a>  
+    <br>
+      <a class="btn btn-outline-primary" href="{% url 'lists:create' %}" role="button">Create a New List</a>  
 </div>
 {% endblock %}

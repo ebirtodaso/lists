@@ -1,9 +1,8 @@
 {% extends 'list/base.html' %}
 {% block content %}
   <form method="post">{% csrf_token %}
-    {{ form.isDone }}
-    {{ form.item }}
+    {{ form.as_p }}
     <input type="submit" value="Update">
-    <a href="{% url 'lists:delete' listitem.id %}">delete</a>
+    <a href="{% url 'lists:delete' list.id %}">delete</a>
   </form>
 {% endblock %}

@@ -1,11 +1,19 @@
 <div class="col-sm-4">
-  <ul>
+  <ul class="nav justify-content-end">
     {% if user.is_authenticated %}
-         <li><a href="/">{{user.username|title}}</a></li>
-         <li><a href="{% url 'lists:logout' %}">Logout</a></li>
+      <li class="nav-item" id="header-nav">
+          <a href="/">{{user.username|title}}</a>
+      </li>
+      <li class="nav-item" id="header-nav">
+        <a href="{% url 'lists:logout' %}">Logout</a>
+      </li>
     {% else %}
-        <li><a href="{% url 'lists:login' %}">Login</a></li>
-        <li><a href="{% url 'lists:register' %}">Register</a></li>
+      <li class="nav-item" id="header-nav">
+        <a href="{% url 'lists:login' %}">Login</a>
+      </li>
+      <li class="nav-item" id="header-nav">
+        <a href="{% url 'lists:register' %}">Register</a>
+      </li>
     {% endif %}
   </ul>
 </div>

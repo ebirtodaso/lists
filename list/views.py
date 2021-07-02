@@ -3,15 +3,13 @@ from django.views import generic
 from django.urls import reverse_lazy
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponseRedirect
-from django.contrib.auth.forms import UserCreationForm # For user creation
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm # For user creation
 from django.contrib.auth import logout, authenticate, login # User authentication
 from django.contrib import messages
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-
 
 #Defined Libraries
-from .models import listItem
-from .forms import doneForm
+from .models import listItem, List
+from .forms import doneForm, addItemForm
 
 class IndexView(generic.ListView):
     template_name = 'list/index.html'
@@ -19,25 +17,49 @@ class IndexView(generic.ListView):
 
     def get_queryset(self):
         """Return the all items in list."""
-        return listItem.objects.all()
+        return List.objects.all()      
 
-class CreateView(generic.edit.CreateView):
+# Create a list
+class CreateListView(generic.edit.CreateView):
   template_name = 'list/create.html'
-  model = listItem
-  fields = ['item']
+  model = List
+  fields = ['list_name']
   success_url = reverse_lazy( 'lists:index')
 
+# Add item to a list
+class AddItemView(generic.edit.CreateView):
+  template_name = 'list/create.html'
+  model = listItem
+  fields = ['item', 'list_name']
+  success_url = reverse_lazy( 'lists:index')
+
+# Update list
 class UpdateView(generic.edit.UpdateView):
     template_name =  'list/update.html'
-    model = listItem
-    fields = ['item']
+    model = List
+    fields = ['list_name']
     success_url = reverse_lazy( 'lists:index')
 
+# Update list
+class UpdateItemView(generic.edit.UpdateView):
+    template_name =  'list/update_item.html'
+    model = listItem
+    fields = ['item', 'isDone']
+    success_url = reverse_lazy( 'lists:index')
+
+# Delete list
 class DeleteView(generic.edit.DeleteView):
     template_name =  'list/delete.html' # override default of listItems listItem_confirm_delete.html
+    model = List
+    success_url = reverse_lazy( 'lists:index')
+
+# Delete item
+class DeleteItemView(generic.edit.DeleteView):
+    template_name =  'list/delete_item.html' # override default of listItems listItem_confirm_delete.html
     model = listItem
     success_url = reverse_lazy( 'lists:index')
 
+# Saves checkbox value after user submits
 def DoneView(request, pk):
   list_item = get_object_or_404(listItem, pk=pk)
   form = doneForm(request.POST or None)
@@ -53,6 +75,7 @@ def DoneView(request, pk):
 
   return HttpResponseRedirect(reverse_lazy('lists:index'))
 
+# Registers a user to database
 def register(request):
 
     if request.method == "POST":
@@ -76,11 +99,13 @@ def register(request):
                   template_name = "list/register.html",
                   context={"form":form})
 
+# Logout 
 def logout_request(request):
   logout(request)
   messages.info(request, "Logged out successfully!")
   return redirect("lists:index")
 
+# Login for authenticated users
 def login_request(request):
 
     if request.method == 'POST':
