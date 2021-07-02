@@ -4,7 +4,7 @@ from . import views
 app_name = 'lists'
 
 urlpatterns = [
-    path('', views.IndexView.as_view(extra_context={'addItem': None}), name='index'),
+    path('', views.IndexView.as_view(), name='index'),
     path('new', views.CreateListView.as_view(), name='create'),
     path('additem', views.AddItemView.as_view(), name='additem'),
     path('update/<int:pk>', views.UpdateView.as_view(), name='update'),
